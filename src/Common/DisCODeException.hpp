@@ -11,7 +11,7 @@
 #include <exception>
 #include <iostream>
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(__QNXNTO__)
 #else
 #	include <execinfo.h>
 #	include <stdlib.h>
@@ -36,7 +36,7 @@ public:
 	/*!
 	 *
 	 */
-	#if defined(WIN32)
+	#if defined(WIN32) || defined(__QNXNTO__)
 
 	#else
 		int nSize;
@@ -49,7 +49,7 @@ public:
 	* Constructor - creates description on the base of string.
 	*/
 	DisCODeException(const std::string & description_) : std::exception(), description(description_) {
-	#if defined(WIN32)
+	#if defined(WIN32) || defined(__QNXNTO__)
 	#else
 		void * array[25];
 		nSize = backtrace(array, 25);
@@ -58,7 +58,7 @@ public:
 	}
 
 	void printStackTrace() {
-	#if defined(WIN32)
+	#if defined(WIN32) || defined(__QNXNTO__)
 		std::cout << "Backtrace (Win32):\n";
 		std::cout << "NOT IMPLEMENTED\n";
 	#else
@@ -79,7 +79,7 @@ public:
 	* Destructor.
 	*/
 	virtual ~DisCODeException () throw () {
-	#if defined(WIN32)
+	#if defined(WIN32) || defined(__QNXNTO__)
 
 	#else
 		free(symbols);

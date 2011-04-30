@@ -8,6 +8,7 @@
 #include "LoggerImpl.hpp"
 
 #include <cstdio>
+#include <cstdlib>
 #include <cctype>
 
 #include <boost/foreach.hpp>
@@ -45,21 +46,21 @@ void Logger::dump(Severity sev, const std::string & msg, void * data, int length
 
 	for (itr = (char*)data, offset = 0; length > 0; ) {
 		step = length < 16 ? length : 16;
-		printf("%04x | ", offset);
+		std::printf("%04x | ", offset);
 		for (int i = 0; i < step; ++i) {
-			printf("%02x ", (itr[i]) & 0xFF);
+			std::printf("%02x ", (itr[i]) & 0xFF);
 		}
 
 		for (int i = step; i < 16; ++i) {
-			printf("   ");
+			std::printf("   ");
 		}
 
-		printf("| ");
+		std::printf("| ");
 
 		for (int i = 0; i < step; ++i) {
-			printf("%c", char2dump(itr[i]));
+			std::printf("%c", char2dump(itr[i]));
 		}
-		printf("\n");
+		std::printf("\n");
 		itr += step;
 		offset += step;
 		length -= step;

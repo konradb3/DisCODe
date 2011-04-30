@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	buf[0] = msg.size() / 256;
 	buf[1] = msg.size() % 256;
 
-	strcpy((char*)buf+2, msg.c_str());
+	std::strcpy((char*)buf+2, msg.c_str());
 	buf[msg.size()+2] = 0;
 
 	client.send(buf, msg.size()+3);
