@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <cstdio>
 
 #include "DisCODeException.hpp"
 
@@ -84,7 +85,7 @@ void TCPServer::acceptNewClient() {
 	addrlen = sizeof remoteaddr;
 	newfd = accept(m_sock, (struct sockaddr *) &remoteaddr, &addrlen);
 	if (newfd == -1) {
-		perror("Accept failed.");
+		std::perror("Accept failed.");
 	} else {
 		FD_SET(newfd, &m_socks); // add to master set
 		if (newfd > m_maxfd) {
@@ -109,7 +110,7 @@ void TCPServer::handleClient(int i) {
 
 	if (nbytes < 0) {
 		// got error
-		//perror("recv failed!");
+		std::perror("recv failed!");
 	} else if (!nbytes) {
 		// connection closed
 		std::cout << "Socket " << i << " hung up" << std::endl;
@@ -174,7 +175,7 @@ void TCPServer::start()
 		int select_return = select(m_maxfd + 1, &read_fds, NULL, NULL, &tv);
 
 		if (select_return == -1) {
-			perror("Select failed!");
+			std::perror("Select failed!");
 			throw Common::DisCODeException("Server creation failed.");
 		}
 		if (select_return == 0) {

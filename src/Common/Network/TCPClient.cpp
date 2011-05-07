@@ -9,6 +9,7 @@
 #include <sys/select.h>
 
 #include <cstring>
+#include <cstdio>
 #include <iostream>
 
 namespace Common {
