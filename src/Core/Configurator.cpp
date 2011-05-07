@@ -365,10 +365,10 @@ void Configurator::loadConnections(const ptree * node) {
 
 			LOG(LINFO) << name << ": str=" << ds_name << " [" << type << "] in " << con_name;
 
-			if (type == "out") {
+			if (ds->type() == Base::DataStreamInterface::dsOut) {
 				ds->setConnection(con);
 			} else
-			if (type == "in") {
+			if (ds->type() == Base::DataStreamInterface::dsIn) {
 				con->addListener(ds);
 			} else {
 				LOG(LERROR) << "Unknown data stream type: " << type << "\n";
