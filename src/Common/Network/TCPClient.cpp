@@ -6,6 +6,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#include <sys/select.h>
+
 #include <cstring>
 #include <iostream>
 
@@ -38,7 +40,7 @@ bool TCPClient::connect(const std::string & host, const std::string & port)
 	int rv;
 	char s[INET6_ADDRSTRLEN];
 
-	memset(&hints, 0, sizeof hints);
+	std::memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 
@@ -135,7 +137,7 @@ int TCPClient::recv(int msec_timeout)
 				// can be overlapped (memmove would work, but it's much slower)
 
 				// copy remaining data to the temporary buffer
-				memcpy(m_tmp_buf, m_buf+skip, m_size);
+				std::memcpy(m_tmp_buf, m_buf+skip, m_size);
 
 				// exchange temporary buffer with client buffer
 				unsigned char * tmp = m_buf;

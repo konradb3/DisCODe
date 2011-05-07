@@ -22,7 +22,7 @@ TCPServer::TCPServer(int port, int max_cons, int buffer_size) : m_buffer_size(bu
 	m_reply_buffer = NULL;
 	m_tmp_buffer = NULL;
 
-	memset(&m_addr, 0, sizeof(m_addr));
+	std::memset(&m_addr, 0, sizeof(m_addr));
 
 	m_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_sock == -1) {
@@ -148,7 +148,7 @@ void TCPServer::handleClient(int i) {
 			// can be overlapped (memmove would work, but it's much slower)
 
 			// copy remaining data to the temporary buffer
-			memcpy(m_tmp_buffer, buffer.buf+skip, buffer.size);
+			std::memcpy(m_tmp_buffer, buffer.buf+skip, buffer.size);
 
 			// exchange temporary buffer with client buffer
 			unsigned char * tmp = buffer.buf;

@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include <stddef.h>
+
 namespace Utils {
 
 #if defined (_WIN32)

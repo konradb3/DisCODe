@@ -90,7 +90,7 @@ protected:
 		std::cout << "Service... " << size << "\n";
 		std::cout << msg+2 << std::endl;
 
-		strcpy((char*)buf, (char*)msg+2);
+		std::strcpy((char*)buf, (char*)msg+2);
 
 		return 0;
 	}
@@ -99,7 +99,7 @@ protected:
 		buf[0] = msg.size() / 256;
 		buf[1] = msg.size() % 256;
 
-		strcpy((char*)buf+2, msg.c_str());
+		std::strcpy((char*)buf+2, msg.c_str());
 		buf[msg.size()+2] = 0;
 	}
 
