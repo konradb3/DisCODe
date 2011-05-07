@@ -31,7 +31,7 @@ public:
 	void load(const ptree & pt) {
 		max_iter = pt.get("iterations", -1);
 		mk_name = pt.get("main_component", "");
-		interval = pt.get("interval", 1.0);
+		interval = pt.get("interval", 0.0);
 	}
 
 protected:

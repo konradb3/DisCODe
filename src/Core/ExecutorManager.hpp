@@ -10,7 +10,6 @@
 #define EXECUTORMANAGER_HPP_
 
 #include "Executor.hpp"
-#include "ContinuousExecutor.hpp"
 #include "PassiveExecutor.hpp"
 #include "PeriodicExecutor.hpp"
 #include "Logger.hpp"
@@ -52,7 +51,7 @@ public:
 
 		Executor * ex;
 		if (type == "continuous") {
-			ex = new ContinuousExecutor(name);
+			ex = new PeriodicExecutor(name);
 		} else if (type == "passive") {
 			ex = new PassiveExecutor(name);
 		} else if (type == "periodic") {
