@@ -12,11 +12,15 @@
 #include "Policies/DataStreamBuffer.hpp"
 #include "Policies/Synchronization.hpp"
 
-
 #include <boost/shared_ptr.hpp>
 
-namespace Base {
+namespace FlowStatus {
+enum FlowStatus {
+	NoData = 0, OldData = 1, NewData = 2
+};
+}
 
+namespace Base {
 
 /*!
  * \brief Input data stream.
@@ -26,15 +30,11 @@ namespace Base {
  * \tparam ReadSync synchronization of read access
  * \tparam WriteSync synchronization of write access
  */
-template
-<
-    typename T,
-    template <class T> class BufferingPolicy = DataStreamBuffer::Queue,
-    class Sync = Synchronization::NoSync
->
-class DataStreamIn : public DataStreamInterface, public BufferingPolicy<T>
-{
-	using BufferingPolicy<T>::retrieve;
+template <typename T, template <class T> class BufferingPolicy = DataStreamBuffer::Queue,
+		class Sync = Synchronization::NoSync>
+class DataStreamIn : public DataStreamInterface, public BufferingPolicy <T> {
+	using BufferingPolicy <T>::retrieve;
+	using BufferingPolicy <T>::empty;
 
 	/// Object used for synchronization of data reading
 	Sync sync;
@@ -45,23 +45,33 @@ public:
 	}
 
 	T read() {
-		Synchronization::ScopeSync<Sync> ss(sync);
-		//sync.lock();
+		Synchronization::ScopeSync <Sync> ss(sync);
+
 		T t = retrieve();
-		//sync.unlock();
+
 		return t;
+	}
+
+	FlowStatus::FlowStatus read(T &t) {
+		Synchronization::ScopeSync <Sync> ss(sync);
+
+		if(!empty()){
+			t = retrieve();
+			return FlowStatus::NewData;
+		} else {
+			return FlowStatus::NoData;
+		}
 	}
 
 protected:
 	virtual void internalSet(void * ptr) {
-		Synchronization::ScopeSync<Sync> ss(sync);
-		//sync.lock();
-		T t = *((T*)ptr);
+		Synchronization::ScopeSync <Sync> ss(sync);
+
+		T t = *((T*) ptr);
 		store(t);
-		//sync.unlock();
+
 	}
 };
-
 
 /*!
  * \class DataStreamOut
@@ -70,13 +80,15 @@ protected:
 template <class T>
 class DataStreamOut : public DataStreamInterface {
 public:
-	DataStreamOut(std::string n = "name") : DataStreamInterface(n) {}
+	DataStreamOut(std::string n = "name") :
+		DataStreamInterface(n) {
+	}
 
 	virtual dsType type() {
 		return dsOut;
 	}
 
-	void write (const T & t) {
+	void write(const T & t) {
 		if (conn)
 			conn->send(t);
 	}
@@ -100,15 +112,10 @@ private:
  * \tparam ReadSync synchronization of read access
  * \tparam WriteSync synchronization of write access
  */
-template
-<
-    typename T,
-    template <class T> class BufferingPolicy = DataStreamBuffer::Queue,
-    class Sync = Synchronization::NoSync
->
-class DataStreamInPtr : public DataStreamInterface, public BufferingPolicy< boost::shared_ptr<T> >
-{
-	using BufferingPolicy< boost::shared_ptr<T> >::retrieve;
+template <typename T, template <class T> class BufferingPolicy = DataStreamBuffer::Queue,
+		class Sync = Synchronization::NoSync>
+class DataStreamInPtr : public DataStreamInterface, public BufferingPolicy <boost::shared_ptr <T> > {
+	using BufferingPolicy <boost::shared_ptr <T> >::retrieve;
 
 	/// Object used for synchronization of data reading
 	Sync sync;
@@ -118,25 +125,24 @@ public:
 		return dsIn;
 	}
 
-	boost::shared_ptr<T> read() {
-		Synchronization::ScopeSync<Sync> ss(sync);
+	boost::shared_ptr <T> read() {
+		Synchronization::ScopeSync <Sync> ss(sync);
 		//sync.lock();
-		boost::shared_ptr<T> t = retrieve();
+		boost::shared_ptr <T> t = retrieve();
 		//sync.unlock();
 		return t;
 	}
 
 protected:
 	virtual void internalSet(void * ptr) {
-		Synchronization::ScopeSync<Sync> ss(sync);
+		Synchronization::ScopeSync <Sync> ss(sync);
 		//sync.lock();
-		T* t = (T*)ptr;
-		boost::shared_ptr<T> p(t->clone());
+		T* t = (T*) ptr;
+		boost::shared_ptr <T> p(t->clone());
 		store(p);
 		//sync.unlock();
 	}
 };
-
 
 }//: namespace Base
 
