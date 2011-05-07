@@ -370,9 +370,6 @@ void Configurator::loadConnections(const ptree * node) {
 			} else
 			if (ds->type() == Base::DataStreamInterface::dsIn) {
 				con->addListener(ds);
-			} else {
-				LOG(LERROR) << "Unknown data stream type: " << type << "\n";
-				continue;
 			}
 		}
 	}
