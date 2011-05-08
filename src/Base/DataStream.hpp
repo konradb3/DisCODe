@@ -34,12 +34,12 @@ template <typename T, template <class T> class BufferingPolicy = DataStreamBuffe
 		class Sync = Synchronization::NoSync>
 class DataStreamIn : public DataStreamInterface, public BufferingPolicy <T> {
 	using BufferingPolicy <T>::retrieve;
-	using BufferingPolicy <T>::empty;
-
 	/// Object used for synchronization of data reading
 	Sync sync;
 
 public:
+	using BufferingPolicy <T>::empty;
+
 	virtual dsType type() {
 		return dsIn;
 	}
